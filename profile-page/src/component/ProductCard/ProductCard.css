@@ -1,0 +1,25 @@
+.product-card {
+  text-align: center;
+  margin: 20px;
+}
+
+.product-card img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  transition: transform 0.2s;
+}
+
+.product-card img:hover {
+  transform: scale(1.05);
+}
+
+.product-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-card h2 {
+  font-size: 18px;
+  margin-top: 10px;
+}

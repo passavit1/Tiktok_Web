@@ -1,14 +1,15 @@
-import React from "react";
-import { FaInstagram, FaTiktok, FaLine } from "react-icons/fa";
-import "./SocialLinks.css";
+// src/component/SocialLinks/SocialLinks.js
+import React from 'react';
+import { FaInstagram, FaTiktok } from 'react-icons/fa';
+import './SocialLinks.css';
 
-const SocialLinks = () => {
+const SocialLinks = ({ igUrl, tiktokUrl }) => {
   return (
     <div className="social-links">
-      <a href="https://www.instagram.com/mimmewmeww/">
+      <a href={igUrl} target="_blank" rel="noopener noreferrer">
         <FaInstagram />
       </a>
-      <a href="https://www.tiktok.com/@solmoon12">
+      <a href={tiktokUrl} target="_blank" rel="noopener noreferrer">
         <FaTiktok />
       </a>
     </div>

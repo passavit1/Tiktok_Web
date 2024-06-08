@@ -24,3 +24,6 @@ yarn-debug.log*
 yarn-error.log*
 node_modules
 "backend/ecommerce-d9160-firebase-adminsdk-blhwr-9db0bd692a.json" 
+backend/src/ecommerce-d9160-firebase-adminsdk-blhwr-9db0bd692a.json
+node_modules/.bin/loose-envify
+

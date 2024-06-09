@@ -11,11 +11,12 @@ const MainPage = () => {
     profileName: '',
     igUrl: '',
     tiktokUrl: '',
-    products: [],
   });
 
+  const [products, setProducts] = useState([]);
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProfileData = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/Users/${process.env.REACT_APP_USER_ID}`);
         const data = response.data;
@@ -25,13 +26,23 @@ const MainPage = () => {
           profileName: data.name || 'John Doe',
           igUrl: data.igUrl || 'https://instagram.com/default',
           tiktokUrl: data.tiktokUrl || 'https://tiktok.com/@default',
-          products: data.products || [], // Default to an empty array if products are not provided
         });
       } catch (error) {
         console.error('Error fetching profile data:', error);
       }
     };
-    fetchData();
+
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/Products/${process.env.REACT_APP_USER_ID}`);
+        setProducts(response.data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    fetchProfileData();
+    fetchProducts();
   }, []);
 
   return (
@@ -39,7 +50,7 @@ const MainPage = () => {
       <Header profileImage={profileData.profileImage} profileName={profileData.profileName} />
       <SocialLinks igUrl={profileData.igUrl} tiktokUrl={profileData.tiktokUrl} />
       <div className="product-grid">
-        {profileData.products.map((product, index) => (
+        {products.map((product, index) => (
           <ProductCard
             key={index}
             image={product.image}

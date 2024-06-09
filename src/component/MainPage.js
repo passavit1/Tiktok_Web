@@ -14,35 +14,25 @@ const MainPage = () => {
     products: [],
   });
 
-  const userId = process.env.REACT_APP_USER_ID;
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch user information
-        const userResponse = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userId}`);
-        const userData = userResponse.data;
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/Users/${process.env.REACT_APP_USER_ID}`);
+        const data = response.data;
 
-        // Fetch products
-        const productsResponse = await axios.get(`${process.env.REACT_APP_API_URL}/products`, {
-          params: { userId },
-        });
-        const productsData = productsResponse.data;
-
-        // Set profile data with both user information and products
         setProfileData({
-          profileImage: userData.profileImageUrl || 'path/to/default/image.jpg',
-          profileName: userData.name || 'John Doe',
-          igUrl: userData.igUrl || 'https://instagram.com/default',
-          tiktokUrl: userData.tiktokUrl || 'https://tiktok.com/@default',
-          products: productsData || [], // Default to an empty array if products are not provided
+          profileImage: data.profileImageUrl || 'path/to/default/image.jpg',
+          profileName: data.name || 'John Doe',
+          igUrl: data.igUrl || 'https://instagram.com/default',
+          tiktokUrl: data.tiktokUrl || 'https://tiktok.com/@default',
+          products: data.products || [], // Default to an empty array if products are not provided
         });
       } catch (error) {
         console.error('Error fetching profile data:', error);
       }
     };
     fetchData();
-  }, [userId]);
+  }, []);
 
   return (
     <div className="main-page">

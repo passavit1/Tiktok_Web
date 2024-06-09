@@ -8,8 +8,7 @@ const userService = {
   createUser: (user) => axios.post(`${API_URL}/users`, user),
   updateUser: (id, user) => axios.put(`${API_URL}/users/${id}`, user),
   deleteUser: (id) => axios.delete(`${API_URL}/users/${id}`),
-  updateProfile: (id, profile) => axios.put(`${API_URL}/profiles/${id}`, profile), // Add this line
-  uploadProfileImage: (formData) => axios.post(`${API_URL}/upload/upload-profile-image`, formData),
+  updateProfile: (profileId, profile) => axios.put(`${API_URL}/profiles/${profileId}`, profile) 
 };
 
 export default userService;

@@ -1,9 +1,57 @@
 .main-page {
   padding: 20px;
+  max-width: 600px; /* Set a max-width to constrain content width on larger screens */
+  margin: 0 auto; /* Center the content */
+  background-color:#cae9e9;
 }
 
 .product-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.product-card {
+  flex: 0 0 100%; /* Make each product card take the full width on mobile */
+  margin-bottom: 20px;
+}
+
+/* Media queries for mobile devices */
+@media (max-width: 600px) {
+  .main-page {
+    padding: 10px;
+  }
+
+  .product-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .product-card {
+    width: 90%; /* Make the product cards a bit narrower */
+  }
+}
+
+header, .social-links {
+  text-align: center;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.login-container button {
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.login-container button:hover {
+  background-color: #357ae8;
 }

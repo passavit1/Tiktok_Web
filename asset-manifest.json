@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/Tiktok_Web/static/css/main.feb32e0c.css",
-    "main.js": "/Tiktok_Web/static/js/main.c53e6c7d.js",
+    "main.js": "/Tiktok_Web/static/js/main.e7177e8d.js",
     "index.html": "/Tiktok_Web/index.html",
     "main.feb32e0c.css.map": "/Tiktok_Web/static/css/main.feb32e0c.css.map",
-    "main.c53e6c7d.js.map": "/Tiktok_Web/static/js/main.c53e6c7d.js.map"
+    "main.e7177e8d.js.map": "/Tiktok_Web/static/js/main.e7177e8d.js.map"
   },
   "entrypoints": [
     "static/css/main.feb32e0c.css",
-    "static/js/main.c53e6c7d.js"
+    "static/js/main.e7177e8d.js"
   ]
 }

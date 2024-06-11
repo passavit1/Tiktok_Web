@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/open_link_solmoom/static/css/main.feb32e0c.css",
-    "main.js": "/open_link_solmoom/static/js/main.67365a2f.js",
+    "main.js": "/open_link_solmoom/static/js/main.f426239a.js",
     "index.html": "/open_link_solmoom/index.html",
     "main.feb32e0c.css.map": "/open_link_solmoom/static/css/main.feb32e0c.css.map",
-    "main.67365a2f.js.map": "/open_link_solmoom/static/js/main.67365a2f.js.map"
+    "main.f426239a.js.map": "/open_link_solmoom/static/js/main.f426239a.js.map"
   },
   "entrypoints": [
     "static/css/main.feb32e0c.css",
-    "static/js/main.67365a2f.js"
+    "static/js/main.f426239a.js"
   ]
 }

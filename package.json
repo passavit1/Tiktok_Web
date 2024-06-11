@@ -1,7 +1,7 @@
 {
   "name": "profile-page",
-  "version": "0.1.0",
-  "homepage": "https://passavit1.github.io/Tiktok_Web",
+  "version": "0.2.0",
+  "homepage": "https://passavit1.github.io/open_link_solmoom",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",

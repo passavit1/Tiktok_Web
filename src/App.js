@@ -16,6 +16,10 @@ function App() {
             <Route path="/Tiktok_Web/admin" element={<AdminPage />} />
             <Route path="/Tiktok_Web/login" element={<Login />} />
             <Route path="/Tiktok_Web" element={<MainPage />} />
+            <Route
+              path=".well-known/pki-validation/:filename"
+              element={<div>Verification File</div>}
+            />
           </Routes>
         </div>
       </Router>

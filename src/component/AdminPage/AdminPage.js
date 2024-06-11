@@ -1,62 +1,53 @@
 import React, { useState, useEffect } from "react";
 import Logout from "../Logout/Logout";
-import { useUser } from "../../Context/UserContext";
-import userService from "../../services/userService";
+import profileService from "../../services/profileService";
 import productService from "../../services/productService";
 import uploadService from "../../services/uploadService";
 import { useNavigate } from "react-router-dom";
 import ProductsManager from "./ProductsManager/ProductsManager";
+import { useUser } from "../../Context/UserContext"; // Import useUser hook
 
 const AdminPage = () => {
-  const { user, setUser } = useUser();
+  const { user, setUser } = useUser(); // Get user from context
   const [profileImage, setProfileImage] = useState(null);
   const [profileImageUrl, setProfileImageUrl] = useState("");
   const [profileName, setProfileName] = useState("");
   const [igUrl, setIgUrl] = useState("");
   const [tiktokUrl, setTiktokUrl] = useState("");
   const [products, setProducts] = useState([]);
-  const [userId, setUserId] = useState("");
-  const [profileId, setProfileId] = useState("");
+  const [profileId, setProfileId] = useState(process.env.REACT_APP_USER_ID);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = sessionStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    if (!storedUser) {
+      navigate("/Tiktok_Web");
     } else {
-      navigate("/Tiktok_Web/login");
+      setUser(JSON.parse(storedUser));
     }
-  }, [setUser, navigate]);
+  }, [navigate, setUser]);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (user) {
+    const fetchProfileData = async () => {
+      if (profileId) {
         try {
-          const response = await userService.getUserByUid(user.uid);
-          const data = response.data;
+          const response = await profileService.getProfileById(profileId);
+          const profile = response.data;
 
-          const { user: userData, profile } = data;
-          setUserId(userData.id);
-          setProfileId(userData.profileId);
-
-          if (profile) {
-            setProfileName(profile.name);
-            setProfileImageUrl(profile.profileImageUrl);
-            setIgUrl(profile.igUrl);
-            setTiktokUrl(profile.tiktokUrl);
-            setProducts(profile.products || []);
-          }
+          setProfileName(profile.name);
+          setProfileImageUrl(profile.profileImageUrl);
+          setIgUrl(profile.igUrl);
+          setTiktokUrl(profile.tiktokUrl);
+          setProducts(profile.products || []);
         } catch (error) {
-          console.error("Error fetching user data:", error);
+          console.error("Error fetching profile data:", error);
         }
       }
     };
 
-    if (user) {
-      fetchUserData();
-    }
-  }, [user]);
+    fetchProfileData();
+  }, [profileId]);
 
   const handleProfileImageChange = (e) => {
     setProfileImage(e.target.files[0]);
@@ -89,7 +80,7 @@ const AdminPage = () => {
     if (file) {
       const formData = new FormData();
       formData.append("image", file);
-      formData.append("userId", userId);
+      formData.append("userId", profileId);
 
       try {
         const response = await uploadService.uploadProductImage(formData);
@@ -107,7 +98,7 @@ const AdminPage = () => {
     if (profileImage) {
       const formData = new FormData();
       formData.append("image", profileImage);
-      formData.append("userId", userId);
+      formData.append("userId", profileId);
 
       try {
         const response = await uploadService.uploadProfileImage(formData);
@@ -127,13 +118,10 @@ const AdminPage = () => {
         igUrl,
         tiktokUrl,
         products,
-        userId: `users/${userId}`,
+        userId: `users/${profileId}`,
       };
 
-      const response = await userService.updateProfile(
-        profileId,
-        updatedProfile
-      );
+      const response = await profileService.updateProfile(profileId, updatedProfile);
       console.log("Profile Info Updated:", response.data.message);
     } catch (error) {
       console.error("Error updating profile info:", error);
@@ -143,7 +131,7 @@ const AdminPage = () => {
   const handleSaveProducts = async () => {
     try {
       const payload = {
-        profileId: profileId, // Ensure profileId is set correctly
+        profileId: profileId,
         products: products.map((product) => ({
           image: product.image,
           title: product.title,
@@ -159,14 +147,9 @@ const AdminPage = () => {
     }
   };
 
-  if (!user) {
-    return <div>Please log in to access this page.</div>;
-  }
-
   return (
     <div>
-      <h2>Welcome, {user.displayName}</h2>
-      <p>Email: {user.email}</p>
+      <h2>Welcome to the Admin Page</h2>
 
       <div>
         <h3>Update Profile Info</h3>
@@ -204,19 +187,14 @@ const AdminPage = () => {
         products={products}
         handleProductImageChange={handleProductImageChange}
         handleProductChange={handleProductChange}
-        handleAddProduct={() =>
-          setProducts([
-            ...products,
-            { image: "", title: "", url: "", category: "" },
-          ])
-        }
+        handleAddProduct={handleAddProduct}
         handleSaveProducts={handleSaveProducts}
       />
 
       <br />
       <hr />
       <br />
-      <Logout setUser={setUser} />
+      <Logout />
     </div>
   );
 };

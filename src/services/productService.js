@@ -5,8 +5,9 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 const productService = {
   addProducts: (payload) => axios.post(`${API_URL}/products`, payload),
-  getProductsByProfileId: (profileId) =>
-    axios.get(`${API_URL}/products/profile/${profileId}`),
+  getAllProducts: () => axios.get(`${API_URL}/products`),
+  updateProduct: (id, product) => axios.put(`${API_URL}/products/${id}`, product),
+  deleteProduct: (id) => axios.delete(`${API_URL}/products/${id}`),
 };
 
 export default productService;

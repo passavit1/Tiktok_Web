@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/Tiktok_Web/static/css/main.feb32e0c.css",
-    "main.js": "/Tiktok_Web/static/js/main.8f6b9fdc.js",
-    "index.html": "/Tiktok_Web/index.html",
-    "main.feb32e0c.css.map": "/Tiktok_Web/static/css/main.feb32e0c.css.map",
-    "main.8f6b9fdc.js.map": "/Tiktok_Web/static/js/main.8f6b9fdc.js.map"
+    "main.css": "/open_link_solmoom/static/css/main.feb32e0c.css",
+    "main.js": "/open_link_solmoom/static/js/main.08292409.js",
+    "index.html": "/open_link_solmoom/index.html",
+    "main.feb32e0c.css.map": "/open_link_solmoom/static/css/main.feb32e0c.css.map",
+    "main.08292409.js.map": "/open_link_solmoom/static/js/main.08292409.js.map"
   },
   "entrypoints": [
     "static/css/main.feb32e0c.css",
-    "static/js/main.8f6b9fdc.js"
+    "static/js/main.08292409.js"
   ]
 }

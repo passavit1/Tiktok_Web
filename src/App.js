@@ -13,9 +13,9 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            <Route path="/Tiktok_Web/admin" element={<AdminPage />} />
-            <Route path="/Tiktok_Web/login" element={<Login />} />
-            <Route path="/Tiktok_Web" element={<MainPage />} />
+            <Route path="/open_link_solmoom/admin" element={<AdminPage />} />
+            <Route path="/open_link_solmoom/login" element={<Login />} />
+            <Route path="/open_link_solmoom" element={<MainPage />} />
           </Routes>
         </div>
       </Router>

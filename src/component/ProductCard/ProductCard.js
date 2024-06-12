@@ -6,7 +6,11 @@ const ProductCard = ({ image, title, url }) => {
   return (
     <Card
       hoverable
-      cover={<img alt={title} src={image} className="product-card-image" />}
+      cover={
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          <img alt={title} src={image} className="product-card-image" />
+        </a>
+      }
       className="product-card"
     >
       <Card.Meta title={title} />

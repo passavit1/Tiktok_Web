@@ -6,9 +6,9 @@ import uploadService from "../../services/uploadService";
 import { useNavigate } from "react-router-dom";
 import ProductsManager from "./ProductsManager/ProductsManager";
 import { useUser } from "../../Context/UserContext"; // Import useUser hook
-import mainDataService from "../../services/mainDataService"; 
-import { Card, Upload, Input, Button } from "antd";
-import { UploadOutlined } from '@ant-design/icons';
+import mainDataService from "../../services/mainDataService";
+import { Card, Upload, Input, Button, Row, Col } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 
 const AdminPage = () => {
   const { user, setUser } = useUser(); // Get user from context
@@ -32,10 +32,12 @@ const AdminPage = () => {
   }, [navigate, setUser]);
 
   useEffect(() => {
-    const fetchProfileWithProducts  = async () => {
+    const fetchProfileWithProducts = async () => {
       if (profileId) {
         try {
-          const response = await mainDataService.getProfileWithProducts(profileId);
+          const response = await mainDataService.getProfileWithProducts(
+            profileId
+          );
           const data = response.data;
 
           setProfileName(data.profile.name);
@@ -69,7 +71,10 @@ const AdminPage = () => {
   };
 
   const handleAddProduct = () => {
-    setProducts([...products, { image: "", title: "", url: "", category: "" }]);
+    setProducts([
+      ...products,
+      { id: null, image: "", title: "", url: "", category: "" },
+    ]);
   };
 
   const handleProductChange = (index, field, value) => {
@@ -105,7 +110,9 @@ const AdminPage = () => {
 
       try {
         const response = await uploadService.uploadProfileImage(formData);
-        setProfileImageUrl(response.data.url); // Save the URL after uploading
+        const newProfileImageUrl = response.data.url;
+        setProfileImageUrl(newProfileImageUrl); // Update the profile image URL state
+        await handleSaveProfileInfo(newProfileImageUrl); // Save profile info after uploading the image
         console.log("Profile Image URL:", response.data.url);
       } catch (error) {
         console.error("Error uploading profile image:", error);
@@ -113,18 +120,21 @@ const AdminPage = () => {
     }
   };
 
-  const handleSaveProfileInfo = async () => {
+  const handleSaveProfileInfo = async (uploadedImageUrl = profileImageUrl) => {
     try {
       const updatedProfile = {
         name: profileName,
-        profileImageUrl: profileImageUrl,
+        profileImageUrl: uploadedImageUrl,
         igUrl,
         tiktokUrl,
         products,
         userId: `users/${profileId}`,
       };
 
-      const response = await profileService.updateProfile(profileId, updatedProfile);
+      const response = await profileService.updateProfile(
+        profileId,
+        updatedProfile
+      );
       console.log("Profile Info Updated:", response.data.message);
     } catch (error) {
       console.error("Error updating profile info:", error);
@@ -137,7 +147,7 @@ const AdminPage = () => {
         profileId,
         products,
       };
-      const response = await productService.addOrUpdateProducts(payload); 
+      const response = await productService.addOrUpdateProducts(payload);
       console.log("Products Updated:", response.data.message);
     } catch (error) {
       console.error("Error updating products:", error);
@@ -156,42 +166,82 @@ const AdminPage = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ padding: "20px" }}>
       <h2>Welcome to the Admin Page</h2>
-  
-      <Card title="Update Profile Info" style={{ marginBottom: '20px' }}>
-        <Upload
-          beforeUpload={(file) => {
-            handleProfileImageChange({ target: { files: [file] } });
-            return false;
-          }}
-          showUploadList={false}
-        >
-          <Button icon={<UploadOutlined />}>Upload Profile Image</Button>
-        </Upload>
-        <Input
-          placeholder="Profile Name"
-          value={profileName}
-          onChange={handleProfileNameChange}
-          style={{ margin: '10px 0' }}
-        />
-        <Input
-          placeholder="IG URL"
-          value={igUrl}
-          onChange={handleIgUrlChange}
-          style={{ margin: '10px 0' }}
-        />
-        <Input
-          placeholder="TikTok URL"
-          value={tiktokUrl}
-          onChange={handleTiktokUrlChange}
-          style={{ margin: '10px 0' }}
-        />
-        <Button type="primary" onClick={handleSaveProfileInfo}>
-          Save Profile Info
-        </Button>
+
+      <Card title="Update Profile Info" style={{ marginBottom: "20px" , width: "60vw" , margin:"auto" }}>
+        <Row gutter={[16, 16]} align="middle">
+          <Col span={6} style={{ textAlign: "center" }}>
+            {profileImageUrl && (
+              <img
+                alt="Profile"
+                src={profileImageUrl}
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                  display: "block",
+                  margin: "0 auto 10px",
+                }}
+              />
+            )}
+            <Upload
+              beforeUpload={(file) => {
+                handleProfileImageChange({ target: { files: [file] } });
+                return false;
+              }}
+              showUploadList={false}
+            >
+              <Button icon={<UploadOutlined />}>Upload Profile Image</Button>
+            </Upload>
+          </Col>
+          <Col span={18}>
+            <Row gutter={[16, 16]} style={{marginBottom:"12px"}}>
+              <Col span={8}>
+                <label>Name:</label>
+              </Col>
+              <Col span={16}>
+                <Input
+                  placeholder="Profile Name"
+                  value={profileName}
+                  onChange={handleProfileNameChange}
+                />
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}  style={{marginBottom:"12px"}}>
+              <Col span={8}>
+                <label>IG URL:</label>
+              </Col>
+              <Col span={16}>
+                <Input
+                  placeholder="IG URL"
+                  value={igUrl}
+                  onChange={handleIgUrlChange}
+                />
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}  style={{marginBottom:"12px"}}>
+              <Col span={8}>
+                <label>TikTok URL:</label>
+              </Col>
+              <Col span={16}>
+                <Input
+                  placeholder="TikTok URL"
+                  value={tiktokUrl}
+                  onChange={handleTiktokUrlChange}
+                />
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+        <Row justify="center" style={{ marginTop: "20px" }}>
+          <Button type="primary" onClick={handleUploadProfileImage}>
+            Save Profile Info
+          </Button>
+        </Row>
       </Card>
-  
+
       <ProductsManager
         products={products}
         handleProductImageChange={handleProductImageChange}
@@ -200,13 +250,12 @@ const AdminPage = () => {
         handleSaveProducts={handleSaveProducts}
         handleDeleteProduct={handleDeleteProduct}
       />
-  
-      <div style={{ marginTop: '20px' }}>
+
+      <div style={{ marginTop: "20px" }}>
         <Logout />
       </div>
     </div>
   );
-  
 };
 
 export default AdminPage;

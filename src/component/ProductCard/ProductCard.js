@@ -1,14 +1,16 @@
 import React from "react";
+import { Card } from "antd";
 import "./ProductCard.css";
 
 const ProductCard = ({ image, title, url }) => {
   return (
-    <div className="product-card">
-      <a href={url} target="_blank" rel="noopener noreferrer">
-        <img src={image} alt={title} />
-      </a>
-      <h2>{title}</h2>
-    </div>
+    <Card
+      hoverable
+      cover={<img alt={title} src={image} className="product-card-image" />}
+      className="product-card"
+    >
+      <Card.Meta title={title} />
+    </Card>
   );
 };
 

@@ -1,11 +1,27 @@
 .social-links {
   display: flex;
   justify-content: center;
-  margin: 20px 0;
+  margin-top: 20px;
 }
 
 .social-links a {
-  margin: 0 10px;
+  color: #000;
   font-size: 24px;
-  color: black;
+  margin: 0 10px;
+  transition: color 0.3s;
+}
+
+.social-links a:hover {
+  color: #0073e6;
+}
+
+@media (min-width: 768px) {
+  .social-links {
+    margin-top: 30px;
+  }
+
+  .social-links a {
+    font-size: 32px; 
+    margin: 0 15px;
+  }
 }

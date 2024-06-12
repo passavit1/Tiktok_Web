@@ -36,12 +36,13 @@ const ProductsManager = ({
                 type="text"
                 icon={<DeleteOutlined />}
                 onClick={() => handleDeleteProduct(product.id, index)}
+                style={{color : "red"}}
               >
                 Delete Product
               </Button>
             ]}
           >
-            <Meta title="Product Details" />
+            <Meta title="Product Details" style={{marginBottom : "12px"}}/>
             <Upload
               beforeUpload={(file) => {
                 handleProductImageChange({ target: { files: [file] } }, index);

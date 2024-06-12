@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import Header from "./Header/Header";
 import SocialLinks from "./SocialLinks/SocialLinks";
 import ProductCard from "./ProductCard/ProductCard";
+import mainDataService from "../services/mainDataService";
 import "./MainPage.css";
-import mainDataService from "../services/mainDataService"
-
 
 const MainPage = () => {
   const [profileData, setProfileData] = useState({
@@ -21,7 +20,6 @@ const MainPage = () => {
         const response = await mainDataService.getProfileWithProducts(process.env.REACT_APP_USER_ID);
         const data = response.data;
 
-        // Update profile data
         setProfileData({
           profileImage: data.profile.profileImageUrl || "",
           profileName: data.profile.name || "",
@@ -29,7 +27,6 @@ const MainPage = () => {
           tiktokUrl: data.profile.tiktokUrl || "https://tiktok.com",
         });
 
-        // Update products data
         setProducts(data.products);
       } catch (error) {
         console.error("Error fetching profile and products data:", error);
@@ -49,7 +46,7 @@ const MainPage = () => {
         igUrl={profileData.igUrl}
         tiktokUrl={profileData.tiktokUrl}
       />
-      <div className="product-grid">
+      <div className="product-slider">
         {products.map((product, index) => (
           <ProductCard
             key={index}

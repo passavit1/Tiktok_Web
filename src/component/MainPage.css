@@ -1,57 +1,46 @@
 .main-page {
   padding: 20px;
-  max-width: 600px; /* Set a max-width to constrain content width on larger screens */
-  margin: 0 auto; /* Center the content */
-  background-color:#cae9e9;
-}
-
-.product-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.product-card {
-  flex: 0 0 100%; /* Make each product card take the full width on mobile */
-  margin-bottom: 20px;
-}
-
-/* Media queries for mobile devices */
-@media (max-width: 600px) {
-  .main-page {
-    padding: 10px;
-  }
-
-  .product-grid {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .product-card {
-    width: 90%; /* Make the product cards a bit narrower */
-  }
-}
-
-header, .social-links {
   text-align: center;
+  background: linear-gradient(to bottom, #fcfafa, #eb8f95);
+  min-height: 100vh; 
 }
 
-.login-container {
+.product-slider {
   display: flex;
-  justify-content: center;
-  margin-top: 20px;
+  overflow-x: auto;
+  padding: 20px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #eb8f95 #fcfafa;
 }
 
-.login-container button {
-  background-color: #4285f4;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 4px;
+.product-slider::-webkit-scrollbar {
+  height: 12px; 
 }
 
-.login-container button:hover {
-  background-color: #357ae8;
+.product-slider::-webkit-scrollbar-thumb {
+  background-color: #eb8f95; 
+  border-radius: 6px; 
+}
+
+.product-slider::-webkit-scrollbar-track {
+  background-color: #fcfafa; 
+  border-radius: 6px; 
+}
+
+.product-slider > * {
+  flex: 0 0 auto;
+  margin-right: 16px;
+}
+
+@media (min-width: 768px) {
+  .product-slider {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    overflow-x: hidden;
+  }
+
+  .product-slider > * {
+    margin-right: 0;
+  }
 }

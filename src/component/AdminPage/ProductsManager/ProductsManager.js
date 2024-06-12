@@ -1,4 +1,9 @@
 import React from "react";
+import { Card, Upload, Input, Button } from "antd";
+import { UploadOutlined, DeleteOutlined } from '@ant-design/icons';
+import "./ProductsManager.css";
+
+const { Meta } = Card;
 
 const ProductsManager = ({
   products,
@@ -6,43 +11,73 @@ const ProductsManager = ({
   handleProductChange,
   handleAddProduct,
   handleSaveProducts,
+  handleDeleteProduct
 }) => {
   return (
-    <div>
+    <div className="products-manager">
       <h3>Products</h3>
-      {products.map((product, index) => (
-        <div key={index}>
-          <label>Product Image:</label>
-          <input
-            type="file"
-            onChange={(e) => handleProductImageChange(e, index)}
-          />
-          <label>Product Title:</label>
-          <input
-            type="text"
-            value={product.title}
-            onChange={(e) =>
-              handleProductChange(index, "title", e.target.value)
+      <div className="product-grid">
+        {products.map((product, index) => (
+          <Card
+            key={index}
+            hoverable
+            style={{ width: 300, margin: '0 10px 20px 0' }}
+            cover={
+              product.image && (
+                <img
+                  alt={product.title}
+                  src={product.image}
+                  className="product-image"
+                />
+              )
             }
-          />
-          <label>Product URL:</label>
-          <input
-            type="text"
-            value={product.url}
-            onChange={(e) => handleProductChange(index, "url", e.target.value)}
-          />
-          <label>Product Category:</label>
-          <input
-            type="text"
-            value={product.category}
-            onChange={(e) =>
-              handleProductChange(index, "category", e.target.value)
-            }
-          />
-        </div>
-      ))}
-      <button onClick={handleAddProduct}>Add Product</button>
-      <button onClick={handleSaveProducts}>Save Products</button>
+            actions={[
+              <Button
+                type="text"
+                icon={<DeleteOutlined />}
+                onClick={() => handleDeleteProduct(product.id, index)}
+              >
+                Delete Product
+              </Button>
+            ]}
+          >
+            <Meta title="Product Details" />
+            <Upload
+              beforeUpload={(file) => {
+                handleProductImageChange({ target: { files: [file] } }, index);
+                return false;
+              }}
+              showUploadList={false}
+            >
+              <Button icon={<UploadOutlined />}>Upload Product Image</Button>
+            </Upload>
+            <Input
+              placeholder="Product Title"
+              value={product.title}
+              onChange={(e) => handleProductChange(index, "title", e.target.value)}
+              style={{ margin: '10px 0' }}
+            />
+            <Input
+              placeholder="Product URL"
+              value={product.url}
+              onChange={(e) => handleProductChange(index, "url", e.target.value)}
+              style={{ margin: '10px 0' }}
+            />
+            <Input
+              placeholder="Product Category"
+              value={product.category}
+              onChange={(e) => handleProductChange(index, "category", e.target.value)}
+              style={{ margin: '10px 0' }}
+            />
+          </Card>
+        ))}
+      </div>
+      <Button type="primary" onClick={handleAddProduct} style={{ margin: '10px 10px 10px 0' }}>
+        Add Product
+      </Button>
+      <Button type="primary" onClick={handleSaveProducts}>
+        Save Products
+      </Button>
     </div>
   );
 };

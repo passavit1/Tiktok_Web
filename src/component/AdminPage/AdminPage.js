@@ -6,6 +6,9 @@ import uploadService from "../../services/uploadService";
 import { useNavigate } from "react-router-dom";
 import ProductsManager from "./ProductsManager/ProductsManager";
 import { useUser } from "../../Context/UserContext"; // Import useUser hook
+import mainDataService from "../../services/mainDataService"; 
+import { Card, Upload, Input, Button } from "antd";
+import { UploadOutlined } from '@ant-design/icons';
 
 const AdminPage = () => {
   const { user, setUser } = useUser(); // Get user from context
@@ -29,24 +32,24 @@ const AdminPage = () => {
   }, [navigate, setUser]);
 
   useEffect(() => {
-    const fetchProfileData = async () => {
+    const fetchProfileWithProducts  = async () => {
       if (profileId) {
         try {
-          const response = await profileService.getProfileById(profileId);
-          const profile = response.data;
+          const response = await mainDataService.getProfileWithProducts(profileId);
+          const data = response.data;
 
-          setProfileName(profile.name);
-          setProfileImageUrl(profile.profileImageUrl);
-          setIgUrl(profile.igUrl);
-          setTiktokUrl(profile.tiktokUrl);
-          setProducts(profile.products || []);
+          setProfileName(data.profile.name);
+          setProfileImageUrl(data.profile.profileImageUrl);
+          setIgUrl(data.profile.igUrl);
+          setTiktokUrl(data.profile.tiktokUrl);
+          setProducts(data.products || []);
         } catch (error) {
           console.error("Error fetching profile data:", error);
         }
       }
     };
 
-    fetchProfileData();
+    fetchProfileWithProducts();
   }, [profileId]);
 
   const handleProfileImageChange = (e) => {
@@ -131,72 +134,79 @@ const AdminPage = () => {
   const handleSaveProducts = async () => {
     try {
       const payload = {
-        profileId: profileId,
-        products: products.map((product) => ({
-          image: product.image,
-          title: product.title,
-          url: product.url,
-          category: product.category,
-        })),
+        profileId,
+        products,
       };
-
-      const response = await productService.addProducts(payload);
+      const response = await productService.addOrUpdateProducts(payload); 
       console.log("Products Updated:", response.data.message);
     } catch (error) {
       console.error("Error updating products:", error);
     }
   };
 
+  const handleDeleteProduct = async (productId, index) => {
+    try {
+      await productService.deleteProduct(productId);
+      const newProducts = products.filter((_, i) => i !== index);
+      setProducts(newProducts);
+      console.log("Product deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
+
   return (
-    <div>
+    <div style={{ padding: '20px' }}>
       <h2>Welcome to the Admin Page</h2>
-
-      <div>
-        <h3>Update Profile Info</h3>
-        <div>
-          <label>Profile Image:</label>
-          <input type="file" onChange={handleProfileImageChange} />
-          <button onClick={handleUploadProfileImage}>
-            Upload Profile Image
-          </button>
-        </div>
-        <div>
-          <label>Profile Name:</label>
-          <input
-            type="text"
-            value={profileName}
-            onChange={handleProfileNameChange}
-          />
-        </div>
-        <div>
-          <label>IG URL:</label>
-          <input type="text" value={igUrl} onChange={handleIgUrlChange} />
-        </div>
-        <div>
-          <label>TikTok URL:</label>
-          <input
-            type="text"
-            value={tiktokUrl}
-            onChange={handleTiktokUrlChange}
-          />
-        </div>
-        <button onClick={handleSaveProfileInfo}>Save Profile Info</button>
-      </div>
-
+  
+      <Card title="Update Profile Info" style={{ marginBottom: '20px' }}>
+        <Upload
+          beforeUpload={(file) => {
+            handleProfileImageChange({ target: { files: [file] } });
+            return false;
+          }}
+          showUploadList={false}
+        >
+          <Button icon={<UploadOutlined />}>Upload Profile Image</Button>
+        </Upload>
+        <Input
+          placeholder="Profile Name"
+          value={profileName}
+          onChange={handleProfileNameChange}
+          style={{ margin: '10px 0' }}
+        />
+        <Input
+          placeholder="IG URL"
+          value={igUrl}
+          onChange={handleIgUrlChange}
+          style={{ margin: '10px 0' }}
+        />
+        <Input
+          placeholder="TikTok URL"
+          value={tiktokUrl}
+          onChange={handleTiktokUrlChange}
+          style={{ margin: '10px 0' }}
+        />
+        <Button type="primary" onClick={handleSaveProfileInfo}>
+          Save Profile Info
+        </Button>
+      </Card>
+  
       <ProductsManager
         products={products}
         handleProductImageChange={handleProductImageChange}
         handleProductChange={handleProductChange}
         handleAddProduct={handleAddProduct}
         handleSaveProducts={handleSaveProducts}
+        handleDeleteProduct={handleDeleteProduct}
       />
-
-      <br />
-      <hr />
-      <br />
-      <Logout />
+  
+      <div style={{ marginTop: '20px' }}>
+        <Logout />
+      </div>
     </div>
   );
+  
 };
 
 export default AdminPage;

@@ -3,8 +3,8 @@ import Header from "./Header/Header";
 import SocialLinks from "./SocialLinks/SocialLinks";
 import ProductCard from "./ProductCard/ProductCard";
 import "./MainPage.css";
-import profileService from "../services/profileService";
-import productService from "../services/productService";
+import mainDataService from "../services/mainDataService"
+
 
 const MainPage = () => {
   const [profileData, setProfileData] = useState({
@@ -16,32 +16,27 @@ const MainPage = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const fetchProfileData = async () => {
+    const fetchProfileWithProducts = async () => {
       try {
-        const response = await profileService.getProfileById(process.env.REACT_APP_USER_ID);
+        const response = await mainDataService.getProfileWithProducts(process.env.REACT_APP_USER_ID);
         const data = response.data;
+
+        // Update profile data
         setProfileData({
-          profileImage: data.profileImageUrl || "",
-          profileName: data.name || "",
-          igUrl: data.igUrl || "https://instagram.com",
-          tiktokUrl: data.tiktokUrl || "https://tiktok.com",
+          profileImage: data.profile.profileImageUrl || "",
+          profileName: data.profile.name || "",
+          igUrl: data.profile.igUrl || "https://instagram.com",
+          tiktokUrl: data.profile.tiktokUrl || "https://tiktok.com",
         });
+
+        // Update products data
+        setProducts(data.products);
       } catch (error) {
-        console.error("Error fetching profile data:", error);
+        console.error("Error fetching profile and products data:", error);
       }
     };
 
-    const fetchProducts = async () => {
-      try {
-        const response = await productService.getAllProducts(process.env.REACT_APP_USER_ID);
-        setProducts(response.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProfileData();
-    fetchProducts();
+    fetchProfileWithProducts();
   }, []);
 
   return (

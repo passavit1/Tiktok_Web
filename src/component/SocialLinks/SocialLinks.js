@@ -2,22 +2,41 @@ import React from 'react';
 import { FaInstagram, FaTiktok } from 'react-icons/fa';
 import './SocialLinks.css';
 
-const isMobileDevice = () => {
-  return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-};
-
 const SocialLinks = ({ igUrl, tiktokUrl }) => {
-  const isMobile = isMobileDevice();
+  const handleInstagramClick = () => {
+    const instagramAppUrl = `instagram://user?username=${igUrl.split('.com/')[1]}`;
+    const webUrl = igUrl.startsWith('http') ? igUrl : `https://${igUrl}`;
+    
+    window.location.href = instagramAppUrl;
+    
+    setTimeout(() => {
+      if (document.visibilityState === 'hidden') {
+        return;
+      }
+      window.location.href = webUrl;
+    }, 500);
+  };
 
-  const mobileIgUrl = isMobile ? `instagram://user?username=${igUrl.split('/').pop()}` : igUrl;
-  const mobileTiktokUrl = isMobile ? `tiktok://user/@${tiktokUrl.split('/').pop()}` : tiktokUrl;
+  const handleTiktokClick = () => {
+    const tiktokAppUrl = `tiktok://user/profile/${tiktokUrl.split('.com/@')[1]}`;
+    const webUrl = tiktokUrl.startsWith('http') ? tiktokUrl : `https://${tiktokUrl}`;
+    
+    window.location.href = tiktokAppUrl;
+    
+    setTimeout(() => {
+      if (document.visibilityState === 'hidden') {
+        return;
+      }
+      window.location.href = webUrl;
+    }, 500);
+  };
 
   return (
     <div className="social-links">
-      <a href={mobileIgUrl} target={isMobile ? "_self" : "_blank"} rel="noopener noreferrer">
+      <a onClick={handleInstagramClick} rel="noopener noreferrer">
         <FaInstagram />
       </a>
-      <a href={mobileTiktokUrl} target={isMobile ? "_self" : "_blank"} rel="noopener noreferrer">
+      <a onClick={handleTiktokClick} rel="noopener noreferrer">
         <FaTiktok />
       </a>
     </div>

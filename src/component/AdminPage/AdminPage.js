@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import ProductsManager from "./ProductsManager/ProductsManager";
 import { useUser } from "../../Context/UserContext"; // Import useUser hook
 import mainDataService from "../../services/mainDataService";
-import { Card, Upload, Input, Button, Row, Col } from "antd";
+import { Card, Upload, Input, Button, Row, Col, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 const AdminPage = () => {
@@ -54,8 +54,25 @@ const AdminPage = () => {
     fetchProfileWithProducts();
   }, [profileId]);
 
-  const handleProfileImageChange = (e) => {
-    setProfileImage(e.target.files[0]);
+  const handleProfileImageChange = async (file) => {
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("userId", profileId);
+
+      try {
+        const response = await uploadService.uploadProfileImage(formData);
+        const newProfileImageUrl = response.data.url;
+        setProfileImageUrl(newProfileImageUrl);
+        console.log("Profile Image URL:", response.data.url);
+        message.success(
+          "Profile image uploaded and profile info updated successfully."
+        );
+      } catch (error) {
+        console.error("Error uploading profile image:", error);
+        message.error("Error uploading profile image.");
+      }
+    }
   };
 
   const handleProfileNameChange = (e) => {
@@ -96,35 +113,19 @@ const AdminPage = () => {
         newProducts[index].image = response.data.url;
         setProducts(newProducts);
         console.log("Product Image URL:", response.data.url);
+        message.success("Product image uploaded successfully.");
       } catch (error) {
         console.error("Error uploading product image:", error);
+        message.error("Error uploading product image.");
       }
     }
   };
 
-  const handleUploadProfileImage = async () => {
-    if (profileImage) {
-      const formData = new FormData();
-      formData.append("image", profileImage);
-      formData.append("userId", profileId);
-
-      try {
-        const response = await uploadService.uploadProfileImage(formData);
-        const newProfileImageUrl = response.data.url;
-        setProfileImageUrl(newProfileImageUrl); // Update the profile image URL state
-        await handleSaveProfileInfo(newProfileImageUrl); // Save profile info after uploading the image
-        console.log("Profile Image URL:", response.data.url);
-      } catch (error) {
-        console.error("Error uploading profile image:", error);
-      }
-    }
-  };
-
-  const handleSaveProfileInfo = async (uploadedImageUrl = profileImageUrl) => {
+  const handleSaveProfileInfo = async () => {
     try {
       const updatedProfile = {
         name: profileName,
-        profileImageUrl: uploadedImageUrl,
+        profileImageUrl: profileImageUrl,
         igUrl,
         tiktokUrl,
         products,
@@ -136,8 +137,10 @@ const AdminPage = () => {
         updatedProfile
       );
       console.log("Profile Info Updated:", response.data.message);
+      message.success("Profile info updated successfully.");
     } catch (error) {
       console.error("Error updating profile info:", error);
+      message.error("Error updating profile info.");
     }
   };
 
@@ -149,8 +152,10 @@ const AdminPage = () => {
       };
       const response = await productService.addOrUpdateProducts(payload);
       console.log("Products Updated:", response.data.message);
+      message.success("Products updated successfully.");
     } catch (error) {
       console.error("Error updating products:", error);
+      message.error("Error updating products.");
     }
   };
 
@@ -160,8 +165,10 @@ const AdminPage = () => {
       const newProducts = products.filter((_, i) => i !== index);
       setProducts(newProducts);
       console.log("Product deleted successfully.");
+      message.success("Product deleted successfully.");
     } catch (error) {
       console.error("Error deleting product:", error);
+      message.error("Error deleting product.");
     }
   };
 
@@ -169,7 +176,10 @@ const AdminPage = () => {
     <div style={{ padding: "20px" }}>
       <h2>Welcome to the Admin Page</h2>
 
-      <Card title="Update Profile Info" style={{ marginBottom: "20px" , width: "60vw" , margin:"auto" }}>
+      <Card
+        title="Update Profile Info"
+        style={{ marginBottom: "20px", width: "60vw", margin: "auto" }}
+      >
         <Row gutter={[16, 16]} align="middle">
           <Col span={6} style={{ textAlign: "center" }}>
             {profileImageUrl && (
@@ -188,7 +198,7 @@ const AdminPage = () => {
             )}
             <Upload
               beforeUpload={(file) => {
-                handleProfileImageChange({ target: { files: [file] } });
+                handleProfileImageChange(file);
                 return false;
               }}
               showUploadList={false}
@@ -197,7 +207,7 @@ const AdminPage = () => {
             </Upload>
           </Col>
           <Col span={18}>
-            <Row gutter={[16, 16]} style={{marginBottom:"12px"}}>
+            <Row gutter={[16, 16]} style={{ marginBottom: "12px" }}>
               <Col span={8}>
                 <label>Name:</label>
               </Col>
@@ -209,7 +219,7 @@ const AdminPage = () => {
                 />
               </Col>
             </Row>
-            <Row gutter={[16, 16]}  style={{marginBottom:"12px"}}>
+            <Row gutter={[16, 16]} style={{ marginBottom: "12px" }}>
               <Col span={8}>
                 <label>IG URL:</label>
               </Col>
@@ -221,7 +231,7 @@ const AdminPage = () => {
                 />
               </Col>
             </Row>
-            <Row gutter={[16, 16]}  style={{marginBottom:"12px"}}>
+            <Row gutter={[16, 16]} style={{ marginBottom: "12px" }}>
               <Col span={8}>
                 <label>TikTok URL:</label>
               </Col>
@@ -236,7 +246,7 @@ const AdminPage = () => {
           </Col>
         </Row>
         <Row justify="center" style={{ marginTop: "20px" }}>
-          <Button type="primary" onClick={handleUploadProfileImage}>
+          <Button type="primary" onClick={handleSaveProfileInfo}>
             Save Profile Info
           </Button>
         </Row>

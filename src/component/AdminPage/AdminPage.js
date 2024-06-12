@@ -22,7 +22,7 @@ const AdminPage = () => {
   useEffect(() => {
     const storedUser = sessionStorage.getItem("user");
     if (!storedUser) {
-      navigate("/Tiktok_Web");
+      navigate("/open_link_solmoom");
     } else {
       setUser(JSON.parse(storedUser));
     }

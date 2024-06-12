@@ -26,7 +26,7 @@ const Login = () => {
         console.log("User found:", response.data.user);
         setUser(user);
         sessionStorage.setItem('user', JSON.stringify(user));
-        navigate('/Tiktok_Web/admin');
+        navigate('/open_link_solmoom/admin');
       } else {
         // UID does not exist
         console.log("User not found in Firestore.");
@@ -64,7 +64,7 @@ const Login = () => {
 
       setUser(user);
       sessionStorage.setItem('user', JSON.stringify(user));
-      navigate('/Tiktok_Web/admin');
+      navigate('/open_link_solmoom/admin');
     } catch (error) {
       console.error("Error creating new user with Google:", error);
       if (error.response) {

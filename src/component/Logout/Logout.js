@@ -10,7 +10,7 @@ const Logout = () => {
   const handleLogout = () => {
     setUser(null);
     sessionStorage.removeItem('user'); 
-    navigate('/Tiktok_Web');
+    navigate('/open_link_solmoom');
   };
 
   return (
